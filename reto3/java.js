@@ -1,16 +1,27 @@
-const texts = [
-  "Ustedes pueden",
-  "El éxito es posible",
-  "Juntos hacia adelante",
-  "Aprendiendo cada día",
-];
+const textElement = document.getElementById("logoText");
+const text = "Compra ahora";
+let index = 0;
+let repeatCount = 0;
+const maxRepeats = Infinity; 
 
-let currentIndex = 0;
-const h1Element = document.querySelector(".hero h1");
-
-function changeText() {
-  currentIndex = (currentIndex + 1) % texts.length; 
-  h1Element.textContent = texts[currentIndex]; 
+function typeText() {
+  if (index < text.length) {
+    textElement.innerHTML += text.charAt(index);
+    index++;
+    setTimeout(typeText, 100); 
+  } else {
+    setTimeout(resetText, 1000); 
+  }
 }
 
-setInterval(changeText, 2000); 
+function resetText() {
+  if (repeatCount < maxRepeats) {
+    textElement.innerHTML = ""; 
+    index = 0; 
+    repeatCount++; 
+    setTimeout(typeText, 0); 
+  }
+}
+
+
+setTimeout(typeText, 1000);

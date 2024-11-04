@@ -3,33 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valle Grande</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Tienda Virtual</title>
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="img/LogoVG.png" alt="Logo Valle Grande">
+            <img src="https://img.freepik.com/vector-gratis/diseno-logotipo-local-tienda-dibujado-mano_23-2149575766.jpg?semt=ais_hybrid" width="70px" alt="Logotipo de la tienda">
         </div>
-        <button class="menu-toggle">
-            <i class="fas fa-bars"></i> 
-        </button>
+        
         <nav>
             <ul>
-                <li><a href="#" class="active"><i class="fas fa-home"></i> Inicio</a></li>
-                <li><a href="#"><i class="fas fa-cogs"></i> Servicios</a></li>
-                <li><a href="#">Nosotros</a></li>
-                <li><a href="#">Contacto</a></li>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="tienda.html">Tienda</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li>
+                    <a href="carrito.html">
+                        Carrito (<span id="carrito-count">0</span>)
+                        <img src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png" alt="Carrito" class="cart-icon">
+                    </a>
+                </li>
             </ul>
         </nav>
     </header>
+    
+    
+    <section class="banner">
+        <div class="banner-image">
+            <img src="https://www.nike.com.pe/on/demandware.static/-/Library-Sites-NikePeruSharedLibrary/default/dw5163fd09/KLPLNcarr.png" alt="Promoción">
+            <div id="logoText"></div>
+        </div>
+        <script src="java.js"></script>
+    </section>
+    
+  
 
-    <main>
-        <section id="inicio" class="hero">
-            <h1 class="animate-text">Ustedes pueden</h1>
-        </section>
-    </main>
-<script src="java.js"></script>
+    <section class="categorias">
+        <h2>Categorías</h2>
+        <div class="categoria-grid">
+            <div class="categoria"><img src="https://i.ytimg.com/vi/Ln4X15WG0ds/maxresdefault.jpg" alt="Ropa"></div>
+            <div class="categoria"><img src="https://media.revistagq.com/photos/66eab1026c70ed9b20924fc5/16:9/w_1280,c_limit/Albums_26.01.jpg" alt="Electrónica"></div>
+            <div class="categoria"><img src="https://www.caem.net/hubfs/Sectors/Homewares/Slider/Homewares-Slider21.jpg" alt="Hogar"></div>
+        </div>
+    </section>
+
+    
+    <section class="product-gallery">
+        <h2>Galería de Productos</h2>
+        <div class="carousel">
+            <button class="carousel-button prev">❮</button>
+            <div class="product-grid">
+                <div class="product-card active">
+                    <img src="https://www.lavanguardia.com/files/content_image_mobile_filter/uploads/2018/12/26/5fa4474197d82.jpeg" alt="Ropa">
+                    <h3>Ropa</h3>
+                    <p class="price">$19.99</p>
+                    <button class="add-to-cart">Agregar al carrito</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2wsk9kCoJ9KRmyDNp_pteeVIGhtE8f9vPhA&s" alt="Electrónica">
+                    <h3>Electrónica</h3>
+                    <p class="price">$29.99</p>
+                    <button class="add-to-cart">Agregar al carrito</button>
+                </div>
+                <div class="product-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPxtLmfk_N2SzHT_PfLOt4cEMdylZpETZntw&s" alt="Hogar">
+                    <h3>Hogar</h3>
+                    <p class="price">$39.99</p>
+                    <button class="add-to-cart">Agregar al carrito</button>
+                </div>
+            </div>
+            <button class="carousel-button next">❯</button>
+        </div>
+    </section>
+    
+    <script src="carusel.js"></script>
+    
+    <section class="cart-page">
+        <h2>Carrito de Compras</h2>
+        <div class="cart-items">
+            <!-- Ejemplo de un artículo en el carrito -->
+            <div class="cart-item">
+                <img src="https://www.lavanguardia.com/files/content_image_mobile_filter/uploads/2018/12/26/5fa4474197d82.jpeg" alt="Ropa">
+                <div class="item-details">
+                    <h3>Ropa</h3>
+                    <p class="price">$19.99</p>
+                    <label for="quantity">Cantidad:</label>
+                    <input type="number" id="quantity" value="1" min="1" />
+                    <button class="remove-button">Eliminar</button>
+                </div>
+            </div>
+            <!-- Repetir el bloque anterior para cada producto -->
+        </div>
+
+        
+        
+        <div class="cart-total">
+            <h3>Total: <span id="total-price">$19.99</span></h3>
+            <button class="checkout-button">Finalizar compra</button>
+        </div>
+    </section>
+    
+
+    <footer>
+        <p>© 2024 Mi Tienda. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>
