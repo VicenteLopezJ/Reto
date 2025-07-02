@@ -13,7 +13,6 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
-  AbstractControl, // Import AbstractControl for easier type checking
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -49,16 +48,16 @@ export class ClienteFormComponent implements OnInit, OnChanges {
   ) {
     this.clienteForm = this.fb.group({
       id: [null],
-      firstName: ['', [Validators.required, Validators.maxLength(100)]], // Added max length
-      lastName: ['', [Validators.required, Validators.maxLength(100)]], // Added max length
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       documentType: ['', Validators.required],
-      documentNumber: ['', Validators.required], // Validators will be set dynamically
+      documentNumber: ['', Validators.required],
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern('^9[0-9]{8}$')], // Changed pattern to start with 9 and be 9 digits
+        [Validators.required, Validators.pattern('^[0-9]{9}$')],
       ],
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(150)]], // Added max length
-      registrationDate: [{ value: '', disabled: true }], // Added, disabled as it's set by backend
+      email: ['', [Validators.required, Validators.email]],
+      // Removed: registrationDate: [null], // This form control is no longer desired
       estado: ['A'],
     });
   }
@@ -86,8 +85,6 @@ export class ClienteFormComponent implements OnInit, OnChanges {
           this.clienteId = null;
         }
         this.clienteForm.patchValue(this.clienteDataFromParent);
-        // If patching in modal mode, ensure validators are set correctly after patch
-        this.setDocumentNumberValidators(this.clienteDataFromParent.documentType);
         console.log(
           'ClienteForm patched with clienteDataFromParent in modal mode.'
         );
@@ -111,22 +108,12 @@ export class ClienteFormComponent implements OnInit, OnChanges {
         }
       });
     }
-
-    // Set up subscription for documentType changes
-    this.clienteForm.get('documentType')?.valueChanges.subscribe((docType) => {
-      this.setDocumentNumberValidators(docType);
-    });
-
-    // Initialize validators for documentNumber based on initial/loaded value
-    // This is important if an existing client is loaded and documentType already has a value
-    this.setDocumentNumberValidators(this.clienteForm.get('documentType')?.value);
   }
 
   loadCliente(id: number): void {
     this.clienteService.getClienteById(id).subscribe({
       next: (cliente: Cliente) => {
         this.clienteForm.patchValue(cliente);
-        this.setDocumentNumberValidators(cliente.documentType); // Apply validators after loading data
         this.clearFeedback();
       },
       error: (error) => {
@@ -139,51 +126,9 @@ export class ClienteFormComponent implements OnInit, OnChanges {
     });
   }
 
-  /**
-   * Dynamically sets validators for the documentNumber field based on documentType.
-   * @param documentType The selected document type (e.g., 'DNI', 'CNE').
-   */
-  setDocumentNumberValidators(documentType: string): void {
-    const documentNumberControl = this.clienteForm.get('documentNumber');
-    if (!documentNumberControl) {
-      return; // Should not happen
-    }
-
-    const validators: any[] = [Validators.required];
-
-    if (documentType === 'DNI') {
-      validators.push(
-        Validators.minLength(8),
-        Validators.maxLength(8),
-        Validators.pattern('^[0-9]+$') // Only digits for DNI
-      );
-    } else if (documentType === 'CNE') { // Changed 'CE' to 'CNE'
-      validators.push(
-        Validators.minLength(20),
-        Validators.maxLength(20)
-        // No specific pattern for CNE other than length based on SQL,
-        // but you could add one if needed (e.g., alphanumeric, specific format)
-      );
-    }
-
-    documentNumberControl.setValidators(validators);
-    documentNumberControl.updateValueAndValidity(); // Recalculate validation status
-  }
-
   onSubmit(): void {
-    // Mark all controls as touched to trigger validation messages before submission
-    this.clienteForm.markAllAsTouched();
-
     if (this.clienteForm.valid) {
-      const cliente: Cliente = { ...this.clienteForm.value };
-      // Remove registrationDate if it's disabled and not part of the backend submission
-      // Or, if backend expects it but generates it, you might remove it here
-      // For now, let's assume backend handles it. If not, consider `cliente.registrationDate = undefined;`
-      // For editing, ensure the 'id' is included in the payload from the form.
-      // If you disabled 'id' in the form, you'd need to re-add it if editing.
-      // Current setup for `id: [null]` implies it's included for update.
-
-
+      const cliente: Cliente = this.clienteForm.value;
       if (this.isEditMode) {
         this.clienteService.updateCliente(cliente).subscribe({
           next: () => {
@@ -209,10 +154,6 @@ export class ClienteFormComponent implements OnInit, OnChanges {
           },
         });
       } else {
-        // When saving a new client, registrationDate is not sent from the form,
-        // as the backend automatically assigns it with GETDATE().
-        // Ensure you're not sending a null/empty registrationDate to backend if it causes issues.
-        // The `registrationDate: [{ value: '', disabled: true }],` above helps prevent sending it.
         this.clienteService.saveCliente(cliente).subscribe({
           next: () => {
             this.showFeedback('Cliente guardado con éxito!', 'success');
@@ -239,7 +180,7 @@ export class ClienteFormComponent implements OnInit, OnChanges {
       }
     } else {
       this.showFeedback('Formulario inválido. Revise los campos.', 'error');
-      // Already handled by markAllAsTouched()
+      this.clienteForm.markAllAsTouched();
     }
   }
 

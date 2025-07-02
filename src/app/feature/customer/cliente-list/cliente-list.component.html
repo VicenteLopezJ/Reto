@@ -40,7 +40,6 @@
             <th>Número Doc.</th>
             <th>Celular</th>
             <th>Email</th>
-            <th>Fecha Registro</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -54,7 +53,6 @@
             <td>{{ cliente.documentNumber }}</td>
             <td>{{ cliente.phoneNumber }}</td>
             <td>{{ cliente.email }}</td>
-            <td>{{ cliente.registrationDate | date : "shortDate" }}</td>
             <td>
               <span
                 class="estado-tag"
@@ -92,11 +90,12 @@
                 >
                   <i class="icon-restore"></i>
                 </button>
-              </div>
+
+                </div>
             </td>
           </tr>
           <tr *ngIf="clientes.length === 0">
-            <td colspan="10" class="no-data">No hay clientes para mostrar.</td>
+            <td colspan="9" class="no-data">No hay clientes para mostrar.</td>
           </tr>
         </tbody>
       </table>

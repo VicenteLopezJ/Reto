@@ -6,6 +6,6 @@ export interface Cliente {
   documentNumber: string;
   phoneNumber: number;
   email: string;
-  registrationDate?: string; 
+  registrationDate?: string;
   estado?: string;
 }

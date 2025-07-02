@@ -51,21 +51,21 @@ export class ClienteListComponent implements OnInit {
     this.clienteToEdit = cliente || null;
     this.formModalTitle = cliente ? 'Editar Cliente' : 'Nuevo Cliente';
     this.isFormModalOpen = true;
-    console.log('Modal opened. isFormModalOpen:', this.isFormModalOpen); 
+    console.log('Modal opened. isFormModalOpen:', this.isFormModalOpen);
   }
 
   closeFormModal(): void {
     this.isFormModalOpen = false;
     this.clienteToEdit = null;
     this.formModalTitle = '';
-    console.log('Modal closed. isFormModalOpen:', this.isFormModalOpen); 
+    console.log('Modal closed. isFormModalOpen:', this.isFormModalOpen);
   }
 
   handleFormSubmitted(success: boolean): void {
     console.log(
       'handleFormSubmitted called in ClienteListComponent. Success:',
       success
-    ); 
+    );
     if (success) {
       this.showFeedback(
         this.clienteToEdit
@@ -73,7 +73,7 @@ export class ClienteListComponent implements OnInit {
           : 'Cliente guardado con éxito!',
         'success'
       );
-      this.loadClientes(); 
+      this.loadClientes();
     } else {
       this.showFeedback('Hubo un error al procesar el cliente.', 'error');
     }
@@ -82,8 +82,8 @@ export class ClienteListComponent implements OnInit {
   }
 
   handleFormCancelled(): void {
-    console.log('handleFormCancelled called in ClienteListComponent.'); 
-    this.showFeedback('Operación de formulario cancelada.', 'info'); 
+    console.log('handleFormCancelled called in ClienteListComponent.');
+    this.showFeedback('Operación de formulario cancelada.', 'info');
     this.closeFormModal();
   }
 

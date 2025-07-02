@@ -1,190 +1,72 @@
 <div class="card">
   <div class="card-content">
-    <div
-      class="feedback-message"
-      [ngClass]="{
-        success: mensajeTipo === 'success',
-        error: mensajeTipo === 'error'
-      }"
-      *ngIf="mensajeFeedback"
-    >
+    <div class="feedback-message" [ngClass]="{'success': mensajeTipo === 'success', 'error': mensajeTipo === 'error'}" *ngIf="mensajeFeedback">
       {{ mensajeFeedback }}
     </div>
 
     <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="firstName">Nombre:</label>
-        <input
-          id="firstName"
-          type="text"
-          formControlName="firstName"
-          class="form-control"
-          [class.is-invalid]="
-            clienteForm.get('firstName')?.invalid &&
-            clienteForm.get('firstName')?.touched
-          "
-        />
-        <div
-          *ngIf="
-            clienteForm.get('firstName')?.invalid &&
-            clienteForm.get('firstName')?.touched
-          "
-          class="invalid-feedback"
-        >
+        <input id="firstName" type="text" formControlName="firstName" class="form-control"
+               [class.is-invalid]="clienteForm.get('firstName')?.invalid && clienteForm.get('firstName')?.touched">
+        <div *ngIf="clienteForm.get('firstName')?.invalid && clienteForm.get('firstName')?.touched" class="invalid-feedback">
           El nombre es requerido.
         </div>
       </div>
 
       <div class="form-group">
         <label for="lastName">Apellido:</label>
-        <input
-          id="lastName"
-          type="text"
-          formControlName="lastName"
-          class="form-control"
-          [class.is-invalid]="
-            clienteForm.get('lastName')?.invalid &&
-            clienteForm.get('lastName')?.touched
-          "
-        />
-        <div
-          *ngIf="
-            clienteForm.get('lastName')?.invalid &&
-            clienteForm.get('lastName')?.touched
-          "
-          class="invalid-feedback"
-        >
+        <input id="lastName" type="text" formControlName="lastName" class="form-control"
+               [class.is-invalid]="clienteForm.get('lastName')?.invalid && clienteForm.get('lastName')?.touched">
+        <div *ngIf="clienteForm.get('lastName')?.invalid && clienteForm.get('lastName')?.touched" class="invalid-feedback">
           El apellido es requerido.
         </div>
       </div>
 
       <div class="form-group">
         <label for="documentType">Tipo Documento:</label>
-        <select
-          id="documentType"
-          formControlName="documentType"
-          class="form-control"
-          [class.is-invalid]="
-            clienteForm.get('documentType')?.invalid &&
-            clienteForm.get('documentType')?.touched
-          "
-        >
+        <select id="documentType" formControlName="documentType" class="form-control"
+                [class.is-invalid]="clienteForm.get('documentType')?.invalid && clienteForm.get('documentType')?.touched">
           <option value="">Seleccione</option>
           <option value="DNI">DNI</option>
-          <option value="CNE">Carnet de Extranjería</option>
-          </select>
-        <div
-          *ngIf="
-            clienteForm.get('documentType')?.invalid &&
-            clienteForm.get('documentType')?.touched
-          "
-          class="invalid-feedback"
-        >
+          <option value="CE">Carnet de Extranjería</option>
+        </select>
+        <div *ngIf="clienteForm.get('documentType')?.invalid && clienteForm.get('documentType')?.touched" class="invalid-feedback">
           El tipo de documento es requerido.
         </div>
       </div>
 
       <div class="form-group">
         <label for="documentNumber">Número Documento:</label>
-        <input
-          id="documentNumber"
-          type="text"
-          formControlName="documentNumber"
-          class="form-control"
-          [class.is-invalid]="
-            clienteForm.get('documentNumber')?.invalid &&
-            clienteForm.get('documentNumber')?.touched
-          "
-        />
-        <div
-          *ngIf="
-            clienteForm.get('documentNumber')?.invalid &&
-            clienteForm.get('documentNumber')?.touched
-          "
-          class="invalid-feedback"
-        >
-          <span
-            *ngIf="clienteForm.get('documentNumber')?.errors?.['required']"
-            >El número de documento es requerido.</span
-          >
-          <span
-            *ngIf="clienteForm.get('documentNumber')?.errors?.['minlength']"
-            >El número de documento es demasiado corto.</span
-          >
-          <span
-            *ngIf="clienteForm.get('documentNumber')?.errors?.['maxlength']"
-            >El número de documento es demasiado largo.</span
-          >
-          <span
-            *ngIf="clienteForm.get('documentNumber')?.errors?.['pattern']"
-            >El formato del número de documento es inválido para el tipo
-            seleccionado.</span
-          >
+        <input id="documentNumber" type="text" formControlName="documentNumber" class="form-control"
+               [class.is-invalid]="clienteForm.get('documentNumber')?.invalid && clienteForm.get('documentNumber')?.touched">
+        <div *ngIf="clienteForm.get('documentNumber')?.invalid && clienteForm.get('documentNumber')?.touched" class="invalid-feedback">
+          El número de documento es requerido.
         </div>
       </div>
 
       <div class="form-group">
         <label for="phoneNumber">Número de Celular:</label>
-        <input
-          id="phoneNumber"
-          type="text"
-          formControlName="phoneNumber"
-          class="form-control"
-          [class.is-invalid]="
-            clienteForm.get('phoneNumber')?.invalid &&
-            clienteForm.get('phoneNumber')?.touched
-          "
-        />
-        <div
-          *ngIf="
-            clienteForm.get('phoneNumber')?.invalid &&
-            clienteForm.get('phoneNumber')?.touched
-          "
-          class="invalid-feedback"
-        >
-          <span *ngIf="clienteForm.get('phoneNumber')?.errors?.['required']"
-            >El número de celular es requerido.</span
-          >
-          <span *ngIf="clienteForm.get('phoneNumber')?.errors?.['pattern']"
-            >Debe ser un número de 9 dígitos y empezar con 9.</span
-          >
+        <input id="phoneNumber" type="text" formControlName="phoneNumber" class="form-control"
+               [class.is-invalid]="clienteForm.get('phoneNumber')?.invalid && clienteForm.get('phoneNumber')?.touched">
+        <div *ngIf="clienteForm.get('phoneNumber')?.invalid && clienteForm.get('phoneNumber')?.touched" class="invalid-feedback">
+          <span *ngIf="clienteForm.get('phoneNumber')?.errors?.['required']">El número de celular es requerido.</span>
+          <span *ngIf="clienteForm.get('phoneNumber')?.errors?.['pattern']">Debe ser un número de 9 dígitos.</span>
         </div>
       </div>
 
       <div class="form-group">
         <label for="email">Email:</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          class="form-control"
-          [class.is-invalid]="
-            clienteForm.get('email')?.invalid &&
-            clienteForm.get('email')?.touched
-          "
-        />
-        <div
-          *ngIf="
-            clienteForm.get('email')?.invalid &&
-            clienteForm.get('email')?.touched
-          "
-          class="invalid-feedback"
-        >
-          <span *ngIf="clienteForm.get('email')?.errors?.['required']"
-            >El email es requerido.</span
-          >
-          <span *ngIf="clienteForm.get('email')?.errors?.['email']"
-            >El formato del email es inválido.</span
-          >
+        <input id="email" type="email" formControlName="email" class="form-control"
+               [class.is-invalid]="clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched">
+        <div *ngIf="clienteForm.get('email')?.invalid && clienteForm.get('email')?.touched" class="invalid-feedback">
+          <span *ngIf="clienteForm.get('email')?.errors?.['required']">El email es requerido.</span>
+          <span *ngIf="clienteForm.get('email')?.errors?.['email']">El formato del email es inválido.</span>
         </div>
       </div>
 
       <div class="button-group">
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="clienteForm.invalid"
-        >
+        <button type="submit" class="btn btn-primary" [disabled]="clienteForm.invalid">
           <i class="icon-save"></i> Guardar
         </button>
         <button type="button" class="btn btn-secondary" (click)="cancel()">
