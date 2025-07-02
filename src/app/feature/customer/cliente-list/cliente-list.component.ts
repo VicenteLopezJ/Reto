@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { ClienteFormComponent } from '../cliente-form/cliente-form.component';
 import { Cliente } from '../../../core/interfaces/cliente';
 import { ClienteService } from '../../../core/services/cliente.service';
@@ -51,22 +50,17 @@ export class ClienteListComponent implements OnInit {
     this.clienteToEdit = cliente || null;
     this.formModalTitle = cliente ? 'Editar Cliente' : 'Nuevo Cliente';
     this.isFormModalOpen = true;
-    console.log('Modal opened. isFormModalOpen:', this.isFormModalOpen);
   }
 
   closeFormModal(): void {
     this.isFormModalOpen = false;
     this.clienteToEdit = null;
     this.formModalTitle = '';
-    console.log('Modal closed. isFormModalOpen:', this.isFormModalOpen);
   }
 
+
   handleFormSubmitted(success: boolean): void {
-    console.log(
-      'handleFormSubmitted called in ClienteListComponent. Success:',
-      success
-    );
-    if (success) {
+    if (success) { 
       this.showFeedback(
         this.clienteToEdit
           ? 'Cliente actualizado con éxito!'
@@ -74,15 +68,14 @@ export class ClienteListComponent implements OnInit {
         'success'
       );
       this.loadClientes();
+      this.closeFormModal(); 
     } else {
-      this.showFeedback('Hubo un error al procesar el cliente.', 'error');
-    }
+      this.showFeedback('Hubo un error al procesar el cliente. Por favor, revise el formulario y la conexión.', 'error');
 
-    this.closeFormModal();
+    }
   }
 
   handleFormCancelled(): void {
-    console.log('handleFormCancelled called in ClienteListComponent.');
     this.showFeedback('Operación de formulario cancelada.', 'info');
     this.closeFormModal();
   }

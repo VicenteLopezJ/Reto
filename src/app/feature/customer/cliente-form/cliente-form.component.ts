@@ -13,6 +13,7 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  AbstractControl,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -48,17 +49,22 @@ export class ClienteFormComponent implements OnInit, OnChanges {
   ) {
     this.clienteForm = this.fb.group({
       id: [null],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/)]],
       documentType: ['', Validators.required],
       documentNumber: ['', Validators.required],
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]{9}$')],
+        [Validators.required, Validators.pattern('^9[0-9]{8}$')],
       ],
       email: ['', [Validators.required, Validators.email]],
-      // Removed: registrationDate: [null], // This form control is no longer desired
+      registrationDate: [null],
       estado: ['A'],
+    });
+
+    this.clienteForm.get('documentType')?.valueChanges.subscribe(value => {
+      this.updateDocumentNumberValidators(value);
+      this.clienteForm.get('documentNumber')?.setValue('');
     });
   }
 
@@ -68,7 +74,6 @@ export class ClienteFormComponent implements OnInit, OnChanges {
       changes['isModalMode'].currentValue === true
     ) {
       this.componentMode = 'modal';
-      console.log('ClienteFormComponent Mode set to: Modal via ngOnChanges');
     }
 
     if (
@@ -85,9 +90,9 @@ export class ClienteFormComponent implements OnInit, OnChanges {
           this.clienteId = null;
         }
         this.clienteForm.patchValue(this.clienteDataFromParent);
-        console.log(
-          'ClienteForm patched with clienteDataFromParent in modal mode.'
-        );
+        if (this.clienteDataFromParent.documentType) {
+          this.updateDocumentNumberValidators(this.clienteDataFromParent.documentType);
+        }
       }
     }
   }
@@ -95,7 +100,6 @@ export class ClienteFormComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     if (!this.isModalMode) {
       this.componentMode = 'route';
-      console.log('ClienteFormComponent Mode: Route (via ngOnInit default)');
       this.route.paramMap.subscribe((params) => {
         const idParam = params.get('id');
         if (idParam) {
@@ -114,6 +118,9 @@ export class ClienteFormComponent implements OnInit, OnChanges {
     this.clienteService.getClienteById(id).subscribe({
       next: (cliente: Cliente) => {
         this.clienteForm.patchValue(cliente);
+        if (cliente.documentType) {
+          this.updateDocumentNumberValidators(cliente.documentType);
+        }
         this.clearFeedback();
       },
       error: (error) => {
@@ -126,55 +133,97 @@ export class ClienteFormComponent implements OnInit, OnChanges {
     });
   }
 
+  updateDocumentNumberValidators(documentType: string): void {
+    const documentNumberControl = this.clienteForm.get('documentNumber');
+    if (documentNumberControl) {
+      documentNumberControl.clearValidators();
+
+      const validators = [Validators.required];
+
+      if (documentType === 'DNI') {
+        validators.push(Validators.pattern('^[0-9]{8}$'));
+      } else if (documentType === 'CNE') {
+        validators.push(Validators.pattern('^[0-9A-Za-z]{20}$'));
+      }
+
+      documentNumberControl.setValidators(validators);
+      documentNumberControl.updateValueAndValidity();
+    }
+  }
+
+  onDocumentNumberInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    const documentType = this.clienteForm.get('documentType')?.value;
+
+    if (documentType === 'DNI') {
+      value = value.replace(/[^0-9]/g, ''); 
+      if (value.length > 8) {
+        value = value.substring(0, 8); 
+      }
+    } else if (documentType === 'CNE') {
+      value = value.replace(/[^0-9A-Za-z]/g, ''); 
+      if (value.length > 20) {
+        value = value.substring(0, 20); 
+      }
+    }
+    this.clienteForm.get('documentNumber')?.setValue(value, { emitEvent: false }); 
+  }
+
+  onPhoneNumberInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    value = value.replace(/[^0-9]/g, '');
+    if (value.length > 9) {
+      value = value.substring(0, 9); 
+    }
+  
+    if (value.length > 0 && value[0] !== '9') {
+      value = '9' + value.substring(1);
+    }
+    this.clienteForm.get('phoneNumber')?.setValue(value, { emitEvent: false }); 
+  }
+
+
   onSubmit(): void {
     if (this.clienteForm.valid) {
       const cliente: Cliente = this.clienteForm.value;
+
+      if (typeof cliente.id === 'string' && cliente.id) {
+          cliente.id = parseInt(cliente.id, 10);
+      }
+
       if (this.isEditMode) {
         this.clienteService.updateCliente(cliente).subscribe({
           next: () => {
             this.showFeedback('Cliente actualizado con éxito!', 'success');
-            if (this.componentMode === 'route') {
-              this.router.navigate(['/clientes']);
-            } else {
+            if (this.componentMode === 'modal') {
               this.formSubmitted.emit(true);
-              console.log(
-                'formSubmitted event emitted (update success) from ClienteFormComponent.'
-              );
+            } else {
+              this.router.navigate(['/clientes']);
             }
           },
           error: (error) => {
             console.error('Error al actualizar cliente:', error);
             this.showFeedback('Error al actualizar cliente.', 'error');
-            if (this.componentMode === 'modal') {
-              this.formSubmitted.emit(false);
-              console.log(
-                'formSubmitted event emitted (update error) from ClienteFormComponent.'
-              );
-            }
           },
         });
       } else {
+        cliente.registrationDate = new Date().toISOString();
+
         this.clienteService.saveCliente(cliente).subscribe({
           next: () => {
             this.showFeedback('Cliente guardado con éxito!', 'success');
-            if (this.componentMode === 'route') {
-              this.router.navigate(['/clientes']);
-            } else {
+            if (this.componentMode === 'modal') {
               this.formSubmitted.emit(true);
-              console.log(
-                'formSubmitted event emitted (save success) from ClienteFormComponent.'
-              );
+            } else {
+              this.router.navigate(['/clientes']);
             }
           },
           error: (error) => {
             console.error('Error al guardar cliente:', error);
             this.showFeedback('Error al guardar cliente.', 'error');
-            if (this.componentMode === 'modal') {
-              this.formSubmitted.emit(false);
-              console.log(
-                'formSubmitted event emitted (save error) from ClienteFormComponent.'
-              );
-            }
           },
         });
       }
@@ -185,12 +234,10 @@ export class ClienteFormComponent implements OnInit, OnChanges {
   }
 
   cancel(): void {
-    console.log('Cancel button clicked. Component Mode:', this.componentMode);
     if (this.componentMode === 'route') {
       this.router.navigate(['/clientes']);
     } else {
       this.formCancelled.emit();
-      console.log('formCancelled event emitted from ClienteFormComponent.');
     }
   }
 
