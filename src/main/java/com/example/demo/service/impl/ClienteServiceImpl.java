@@ -1,7 +1,14 @@
 package com.example.demo.service.impl;
 
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Cliente;
@@ -9,6 +16,9 @@ import com.example.demo.repository.ClienteRepository;
 import com.example.demo.service.ClienteService;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 @Slf4j
 @Service
@@ -16,7 +26,10 @@ public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;
 
- 
+
+     @Autowired
+    private DataSource datasource;
+    
     public ClienteServiceImpl(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
@@ -75,4 +88,15 @@ public class ClienteServiceImpl implements ClienteService {
     public List<Cliente> findByEstado(String estado) {
         return clienteRepository.findByEstado(estado);
     }
+
+    @Override
+    public byte[] generateJasperPdfReport() throws Exception {
+
+        InputStream jasperStream = new ClassPathResource("Reports/Blank_A4.jasper").getInputStream();
+        HashMap<String, Object> params = new HashMap<>();
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperStream, params, datasource.getConnection());
+        log.info("Reporte Jasper en PDF");
+        return JasperExportManager.exportReportToPdf(jasperPrint);
+    }
+
 }

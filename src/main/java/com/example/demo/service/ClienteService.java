@@ -20,4 +20,6 @@ public interface ClienteService {
     void restore(Long id);
 
     List<Cliente> findByEstado(String estado);
+
+    byte[] generateJasperPdfReport() throws Exception;
 }

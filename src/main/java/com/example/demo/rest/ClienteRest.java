@@ -2,6 +2,10 @@ package com.example.demo.rest;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.http.HttpHeaders; 
+import org.springframework.http.MediaType;  
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.Cliente;
@@ -59,5 +63,19 @@ public class ClienteRest {
     @GetMapping("/estado/{estado}")
     public List<Cliente> findByEstado(@PathVariable String estado) {
         return clienteService.findByEstado(estado);
+    }
+
+    @GetMapping("/pdf")
+    public ResponseEntity<byte[]> generateJasperPdfReport() {
+        try {
+            byte[] pdf = clienteService.generateJasperPdfReport();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"reporte_Cliente.pdf\"")
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdf);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }
