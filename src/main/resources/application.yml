@@ -3,20 +3,20 @@ server:
 
 spring:
   datasource:
-    url: jdbc:oracle:thin:@localhost:1522/XEPDB1
+    #url: jdbc:oracle:thin:@localhost:1522/XEPDB1
     #url: jdbc:oracle:thin:@oracle-docker:1522/XEPDB1
-    #url: jdbc:oracle:thin:@developer_medium?TNS_ADMIN=Wallet_developer
-    #username: client_user
-    #password: Client123456789
+    url: jdbc:oracle:thin:@developer_medium?TNS_ADMIN=Wallet_developer
     username: client_user
-    password: client123
+    password: Client123456789
+    #username: client_user
+    #password: client123
 
     #username: kevinAgro
     #password: Kevin123
     driver-class-name: oracle.jdbc.OracleDriver
   jpa:
     hibernate:
-      ddl-auto: none # none | update | create | create-drop
+      ddl-auto: update # none | update | create | create-drop
     show-sql: false
     properties:
       hibernate:
