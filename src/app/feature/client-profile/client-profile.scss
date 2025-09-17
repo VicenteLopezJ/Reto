@@ -1,0 +1,130 @@
+@use "sass:math";
+@use "sass:color";
+
+$primary-color: #000;
+$text-color-dark: #111;
+$text-color-medium: #555;
+$text-color-light: #999;
+$border-color-light: #e5e5e5;
+$card-bg-color: #fff;
+$body-bg-color: #f9fafb;
+
+$spacing-xs: 8px;
+$spacing-sm: 16px;
+$spacing-md: 24px;
+$spacing-lg: 32px;
+$spacing-xl: 40px;
+
+$border-radius-sm: 6px;
+$border-radius-md: 12px;
+
+$box-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.04);
+$box-shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+:host {
+  display: block;
+  background-color: $body-bg-color;
+  padding: $spacing-lg;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.profile-container {
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+mat-card {
+  border-radius: $border-radius-md;
+  box-shadow: $box-shadow-md;
+  background-color: $card-bg-color;
+  padding: $spacing-lg;
+
+  &:hover {
+    box-shadow: $box-shadow-lg;
+  }
+}
+
+mat-card-header {
+  padding-bottom: $spacing-md;
+  margin-bottom: $spacing-md;
+  border-bottom: 1px solid $border-color-light;
+}
+
+mat-card-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: $text-color-dark;
+  margin: 0;
+}
+
+mat-card-subtitle {
+  font-size: 1rem;
+  color: $text-color-medium;
+  margin-top: $spacing-xs;
+}
+
+.field {
+  width: 100%;
+  margin-bottom: $spacing-sm;
+}
+
+mat-form-field {
+  width: 100%;
+
+  .mat-mdc-form-field-flex {
+    border-radius: $border-radius-sm;
+  }
+
+  .mat-mdc-form-field-label {
+    color: $text-color-medium;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: $spacing-md;
+  border-top: 1px solid $border-color-light;
+  padding-top: $spacing-sm;
+}
+
+button.mat-mdc-raised-button.mat-primary {
+  background-color: $primary-color;
+  color: white;
+  border-radius: $border-radius-sm;
+  box-shadow: $box-shadow-md;
+
+  &:hover {
+    background-color: color.adjust($primary-color, $lightness: -10%);
+  }
+}
+
+.mat-card-content {
+  p {
+    margin: 0 0 4px 0;
+    line-height: 1.4;
+    color: $text-color-dark;
+  }
+
+  strong {
+    display: block;
+    color: $text-color-medium;
+    margin-bottom: 2px;
+    font-size: 0.9rem;
+  }
+}
+
+.info-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  margin-bottom: $spacing-sm;
+}
+
+.info-item {
+  flex: 1;
+  min-width: 200px;
+}

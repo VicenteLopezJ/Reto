@@ -1,0 +1,211 @@
+@use "sass:color";
+
+$order-card-padding: 32px;
+$primary-green: #4caf50;
+$secondary-green: #81c784;
+$background-light: #e8f5e9;
+$text-dark: #2e3b21;
+$border-radius: 12px;
+
+$order-icon-gradient: linear-gradient(135deg, #558b2f, #aed581);
+
+.order-card {
+  min-width: 400px;
+  max-width: 720px;
+  margin: 24px auto;
+  border-radius: $border-radius;
+  box-shadow: 0 8px 20px rgba(46, 59, 33, 0.25);
+  background-color: $background-light;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: $text-dark;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;  
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0 12px 28px rgba(46, 59, 33, 0.35);
+  }
+
+  mat-card-header {
+    padding: 24px $order-card-padding 12px $order-card-padding;
+    background-color: $primary-green;
+    color: white;
+    border-top-left-radius: $border-radius;
+    border-top-right-radius: $border-radius;
+    display: flex;
+    align-items: center;
+
+    mat-card-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .icon {
+        width: 28px;
+        height: 28px;
+        background: $order-icon-gradient;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 2px rgba(85, 139, 47, 0.7));
+      }
+    }
+
+    .spacer {
+      flex: 1 1 auto;
+    }
+
+    button {
+      color: white;
+    }
+  }
+
+  mat-card-content {
+    padding: $order-card-padding;
+    overflow-y: auto;
+    flex-grow: 1;
+    font-size: 1rem;
+    line-height: 1.5;
+
+    .order-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 32px;
+      margin-bottom: 32px;
+
+      div {
+        font-weight: 600;
+        color: color.adjust($text-dark, $lightness: -10%);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .icon-product, .icon-payment {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background: $order-icon-gradient;
+        
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0 0 1px rgba(85, 139, 47, 0.8));
+          font-size: 20px;
+        }
+      }
+    }
+
+    h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: $primary-green;
+      border-bottom: 2px solid color.adjust($primary-green, $lightness: 30%);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      user-select: none;
+    }
+
+    .order-details-list {
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 8px;
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+
+        .detail-item {
+          padding: 10px 12px;
+          border-bottom: 1px color.adjust($primary-green, $lightness: -10%);
+          font-size: 0.95rem;
+          color: color.adjust($primary-green, $lightness: -10%);
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+
+          span {
+            &.prod-id { font-weight: 700; color: $primary-green; min-width: 130px; }
+            &.qty { min-width: 90px; }
+            &.unit-price { min-width: 140px; }
+            &.subtotal { min-width: 110px; font-weight: 600; }
+            &.discount { color: #ff6f00; font-weight: 600; }
+            &.comments { font-style: italic; color: #455a64; flex-grow: 1; }
+          }
+
+          &:hover {
+            background-color: color.adjust($primary-green, $lightness: 30%);
+            border-color: $secondary-green;
+          }
+        }
+      }
+    }
+
+    .no-details {
+      font-style: italic;
+      color: color.adjust($primary-green, $lightness: 30%);
+      text-align: center;
+      margin-top: 16px;
+    }
+  }
+
+  mat-card-actions {
+    padding: 16px $order-card-padding 24px $order-card-padding;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      min-width: 120px;
+      font-weight: 700;
+      border-radius: 28px;
+      padding: 10px 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background-color: $primary-green;
+      color: white;
+      box-shadow: 0 2px 8px rgba(76, 175, 80, 0.6);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        background-color: color.adjust($primary-green, $lightness: -10%);
+        box-shadow: 0 4px 16px rgba(56, 142, 60, 0.75);
+      }
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .order-card {
+    min-width: 100%;
+    margin: 12px 8px;
+
+    mat-card-header {
+      padding: 16px 20px;
+    }
+
+    mat-card-content {
+      padding: 16px 20px;
+      .order-info {
+        grid-template-columns: 1fr;
+        gap: 8px 0;
+      }
+      .order-details-list {
+        max-height: 180px;
+      }
+    }
+
+    mat-card-actions {
+      padding: 12px 20px;
+      flex-direction: column;
+      gap: 10px;
+
+      button {
+        width: 100%;
+        min-width: unset;
+      }
+    }
+  }
+}

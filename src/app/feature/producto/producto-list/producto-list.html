@@ -1,0 +1,77 @@
+<app-producto-form *ngIf="mostrarFormulario" [producto]="productoParaEditar"
+    (guardar)="procesarProductoGuardado($event)" (cerrar)="cerrarFormulario()">
+</app-producto-form>
+
+<header>
+    <h2>Productos Registrados</h2>
+    <button (click)="abrirFormulario()"><i class="fas fa-seedling"></i> + Añadir Producto</button>
+</header>
+
+<div class="filter-section">
+    <input type="text" placeholder=" Buscar productos..." [(ngModel)]="searchTerm" (input)="filtrarProductos()" />
+    <div class="filter-buttons">
+        <button [class.active-filter]="currentFilter === 'active'" (click)="setFilter('active')">
+            Activos ({{ activosCount }})
+        </button>
+        <button [class.active-filter]="currentFilter === 'inactive'" (click)="setFilter('inactive')">
+            Inactivos ({{ inactivosCount }})
+        </button>
+        <button [class.active-filter]="currentFilter === 'all'" (click)="setFilter('all')">
+            Todos ({{ totalCount }})
+        </button>
+        <button (click)="reportPdf()">G Reporte</button>
+    </div>
+</div>
+
+<table class="tabla-estilizada">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Marca</th>
+            <th>Categoría</th>
+            <th>Unidad de medida</th>
+            <th>Precio unitario</th>
+            <th>Vencimiento</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let producto of productosFiltrados">
+            <td>{{ producto.id }}</td>
+            <td>{{ producto.name }}</td>
+            <td>{{ producto.brand }}</td>
+            <td>{{ producto.categories }}</td>
+            <td>{{ producto.unit_measure }}</td>
+            <td>{{ producto.unit_price }}</td>
+            <td>{{ producto.expiration_date }}</td>
+            <td>
+                <span [ngClass]="{
+                    'badge-estado': true,
+                    'activo': producto.state === 'A',
+                    'inactivo': producto.state === 'I'
+                }">
+                    {{ producto.state === 'A' ? 'Activo' : (producto.state === 'I' ? 'Inactivo' : producto.state) }}
+                </span>
+            </td>
+            <td>
+                <ng-container *ngIf="producto.state === 'A' || (currentFilter === 'all' && producto.state === 'A')">
+                    <button class="btn-accion editar" (click)="editar(producto)">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button *ngIf="producto.id !== undefined" class="btn-accion eliminar"
+                        (click)="eliminar(producto.id!)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="producto.state === 'I'">
+                    <button *ngIf="producto.id !== undefined" class="btn-accion restaurar"
+                        (click)="restaurar(producto.id!)">
+                        <i class="fas fa-redo-alt"></i> </button>
+                </ng-container>
+            </td>
+        </tr>
+    </tbody>
+</table>

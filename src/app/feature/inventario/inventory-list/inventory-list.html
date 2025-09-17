@@ -1,0 +1,67 @@
+<app-inventory-form *ngIf="mostrarFormulario" [inventory]="nuevoInventario" [existingProductIds]="productIds"
+    (guardar)="guardarInventario($event)" (cerrar)="cerrarFormulario()"></app-inventory-form>
+
+<header>
+    <h2>Registro del inventario</h2>
+    <button (click)="abrirFormulario()">+ Añadir nuevo</button>
+</header>
+
+<div class="filter-section">
+    <input type="text" placeholder=" Buscar productos en el inventario..." [(ngModel)]="searchTerm"
+        (input)="filtrarInventory()" />
+    <div class="filter-buttons">
+        <button [class.active-filter]="currentFilter === 'active'" (click)="setFilter('active')">
+            Activos ({{ activosCount }})
+        </button>
+        <button [class.active-filter]="currentFilter === 'inactive'" (click)="setFilter('inactive')">
+            Inactivos ({{ inactivosCount }})
+        </button>
+        <button [class.active-filter]="currentFilter === 'all'" (click)="setFilter('all')">
+            Todos ({{ totalCount }})
+        </button>
+        <button>G Reporte</button>
+    </div>
+</div>
+
+<table class="tabla-estilizada">
+    <thead>
+        <tr>
+            <th>Producto ID</th>
+            <th>Cantidad disponible</th>
+            <th>Numero de lote</th>
+            <th>Especificaciones</th>
+            <th>Ubicación</th>
+            <th>Fecha de entrada</th>
+            <th>Fecha de salida</th>
+            <th>estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let inventory of inventoryFiltrados">
+            <td>{{ inventory.products_id }}</td>
+            <td>{{ inventory.quantity_available }}</td>
+            <td>{{ inventory.batch_number }}</td>
+            <td>{{ inventory.specs }}</td>
+            <td>{{ inventory.location }}</td>
+            <td>{{ inventory.entry_date }}</td>
+            <td>{{ inventory.last_updated }}</td>
+            <td>
+                <span [ngClass]="{
+                    'badge-estado': true,
+                    'disponible': inventory.status === 'DIS',
+                    'reservado': inventory.status === 'RES',
+                    'tramitido': inventory.status === 'TRA',
+                    'dañado': inventory.status === 'DAÑ'
+                }">
+                    {{ inventory.status === 'DIS' ? 'disponible' :
+                    inventory.status === 'TRA' ? 'tramitido' :
+                    inventory.status === 'DAÑ' ? 'dañado' :
+                    (inventory.status === 'RES' ? 'reservado' : inventory.status) }}
+                </span>
+            </td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+</table>

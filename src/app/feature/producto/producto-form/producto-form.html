@@ -1,0 +1,72 @@
+<div class="modal-overlay">
+    <div class="modal">
+        <h3>{{ producto.id ? 'Editar' : 'Nuevo' }} Producto</h3>
+
+        <div class="form-group" [class.has-content]="producto.name">
+            <input type="text" required [(ngModel)]="producto.name" (blur)="nameTouched = true"
+                (input)="onInputName($event)" />
+            <label>Nombre</label>
+            <div *ngIf="nameTouched && !nameValid()" class="error-message">Solo se permiten letras y máximo dos espacios
+                seguidos</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="producto.brand">
+            <input type="text" required [(ngModel)]="producto.brand" (blur)="brandTouched = true"
+                (input)="onInputBrand($event)" />
+            <label>Marca</label>
+            <div *ngIf="brandTouched && !brandValid()" class="error-message">Solo letras permitidas y máximo dos
+                espacios consecutivos</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="producto.unit_measure">
+            <select required [(ngModel)]="producto.unit_measure" (blur)="unitTouched = true">
+                <option value="" disabled selected hidden></option>
+                <option value="L">Litro</option>
+                <option value="K">Kilo</option>
+            </select>
+            <label>Unidad</label>
+            <div *ngIf="unitTouched && !unitValid()" class="error-message">Unidad requerida</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="producto.categories">
+            <select required [(ngModel)]="producto.categories" (blur)="categoryTouched = true">
+                <option value="" disabled selected hidden></option>
+                <option value="FU">Fungicida</option>
+                <option value="IN">Insecticida</option>
+                <option value="FO">Foliar</option>
+                <option value="SE">Semilla</option>
+            </select>
+            <label>Categoría</label>
+            <div *ngIf="categoryTouched && !categoryValid()" class="error-message">Categoría requerida</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="isPriceContentReady() || priceTouched">
+            <input type="text" required [(ngModel)]="producto.unit_price" (blur)="priceTouched = true"
+                (input)="onInputPrice($event)" />
+            <label>Precio unitario</label>
+            <div *ngIf="priceTouched && !priceValid()" class="error-message">Debe ser un valor positivo</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="producto.expiration_date">
+            <input type="date" required [(ngModel)]="producto.expiration_date" [min]="minDate"
+                (blur)="dateTouched = true" />
+            <label>Vencimiento</label>
+            <div *ngIf="dateTouched && !expirationDateValid()" class="error-message">
+                La fecha debe ser al menos un año después de la fecha actual.
+            </div>
+        </div>
+
+        <div class="form-group" [class.has-content]="true">
+            <select required [(ngModel)]="producto.state" disabled>
+                <option value="A">Activo</option>
+                <option value="I" hidden>Inactivo</option>
+            </select>
+            <label>Estado</label>
+        </div>
+
+        <div class="buttons">
+            <button (click)="guardarProducto()">Guardar</button>
+            <button class="cancel-btn" (click)="cerrarFormulario()">Cancelar</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,223 @@
+<div class="modal-overlay" (click)="confirmarCancelar()"></div>
+
+<div class="modal-form">
+  <form (ngSubmit)="confirmarGuardar()" #clienteForm="ngForm" novalidate>
+    <h2 class="form-title">
+      {{ editando ? "Editar Cliente" : "Nuevo Cliente" }}
+    </h2>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input
+        matInput
+        [(ngModel)]="nuevoCliente.firstName"
+        name="firstName"
+        required
+        pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+        #firstName="ngModel"
+      />
+      <mat-error *ngIf="firstName.invalid && firstName.touched">
+        <span *ngIf="firstName.errors?.['required']"
+          >El nombre es requerido</span
+        >
+        <span *ngIf="firstName.errors?.['pattern']"
+          >Solo letras y espacios</span
+        >
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Apellido</mat-label>
+      <input
+        matInput
+        [(ngModel)]="nuevoCliente.lastName"
+        name="lastName"
+        required
+        pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+        #lastName="ngModel"
+      />
+      <mat-error *ngIf="lastName.invalid && lastName.touched">
+        <span *ngIf="lastName.errors?.['required']"
+          >El apellido es requerido</span
+        >
+        <span *ngIf="lastName.errors?.['pattern']">Solo letras y espacios</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Fecha de Nacimiento</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [(ngModel)]="nuevoCliente.birthdayDate"
+        name="birthdayDate"
+        required
+        [max]="maxBirthdayDate"
+        #birthdayDate="ngModel"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="birthdayDate.invalid && birthdayDate.touched"
+        >La fecha es requerida y ser mayor de edad</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tipo de Documento</mat-label>
+      <mat-select
+        [(ngModel)]="nuevoCliente.documentType"
+        name="documentType"
+        required
+        #documentType="ngModel"
+      >
+        <mat-option value="DNI">DNI</mat-option>
+        <mat-option value="CNE">CNE</mat-option>
+      </mat-select>
+      <mat-error *ngIf="documentType.invalid && documentType.touched"
+        >Seleccione un tipo de documento</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>N° Documento</mat-label>
+      <input
+        matInput
+        [(ngModel)]="nuevoCliente.documentNumber"
+        name="documentNumber"
+        required
+        [pattern]="
+          nuevoCliente.documentType === 'DNI'
+            ? '^[1-9]\\d{7}$'
+            : '^[1-9]\\d{19}$'
+        "
+        [maxlength]="nuevoCliente.documentType === 'DNI' ? 8 : 20"
+        #documentNumber="ngModel"
+      />
+      <mat-error *ngIf="documentNumber.invalid && documentNumber.touched">
+        <span *ngIf="documentNumber.errors?.['required']"
+          >El número de documento es requerido</span
+        >
+        <span *ngIf="documentNumber.errors?.['pattern']">
+          {{
+            nuevoCliente.documentType === "DNI"
+              ? "DNI debe tener 8 dígitos y no puede iniciar con 0"
+              : "CNE debe tener 20 dígitos y no puede iniciar con 0"
+          }}
+        </span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Correo</mat-label>
+      <input
+        matInput
+        type="email"
+        [(ngModel)]="nuevoCliente.email"
+        name="email"
+        required
+        email
+        #email="ngModel"
+      />
+      <mat-error *ngIf="email.invalid && email.touched">
+        <span *ngIf="email.errors?.['required']">El correo es requerido</span>
+        <span *ngIf="email.errors?.['email']">Correo inválido</span>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Teléfono</mat-label>
+      <input
+        matInput
+        type="text"
+        inputmode="numeric"
+        maxlength="9"
+        pattern="^9\d{8}$"
+        [(ngModel)]="nuevoCliente.phoneNumber"
+        name="phoneNumber"
+        required
+        #phoneNumber="ngModel"
+      />
+      <mat-error *ngIf="phoneNumber.invalid && phoneNumber.touched">
+        <span *ngIf="phoneNumber.errors?.['required']"
+          >El teléfono es requerido</span
+        >
+        <span *ngIf="phoneNumber.errors?.['pattern']"
+          >Debe empezar con 9 y tener 9 dígitos</span
+        >
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tipo de Cliente</mat-label>
+      <mat-select
+        [(ngModel)]="nuevoCliente.client_type"
+        name="client_type"
+        required
+        #clientType="ngModel"
+      >
+        <mat-option value="MI">Minorista</mat-option>
+        <mat-option value="MA">Mayorista</mat-option>
+      </mat-select>
+      <mat-error *ngIf="clientType.invalid && clientType.touched"
+        >Seleccione un tipo de cliente</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Dirección</mat-label>
+      <input
+        matInput
+        [(ngModel)]="nuevoCliente.address"
+        name="address"
+        required
+        #address="ngModel"
+      />
+      <mat-error *ngIf="address.invalid && address.touched"
+        >La dirección es requerida</mat-error
+      >
+    </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="nuevoCliente.vip" name="vip"
+      >Cliente VIP</mat-checkbox
+    >
+
+    <div *ngIf="editando" class="full-width">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Estado</mat-label>
+        <mat-select
+          [(ngModel)]="nuevoCliente.estado"
+          name="estado"
+          required
+          #estado="ngModel"
+          [disabled]="editando"
+        >
+          >
+          <mat-option value="A">Activo</mat-option>
+          <mat-option value="I">Inactivo</mat-option>
+        </mat-select>
+        <mat-error *ngIf="estado.invalid && estado.touched"
+          >Seleccione un estado</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <div class="form-buttons">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="clienteForm.invalid"
+      >
+        {{ editando ? "Guardar" : "Añadir" }} Cliente
+      </button>
+      <button
+        mat-stroked-button
+        color="warn"
+        type="button"
+        (click)="confirmarCancelar()"
+      >
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>

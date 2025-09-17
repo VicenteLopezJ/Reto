@@ -1,0 +1,260 @@
+<div class="vendor-management-container">
+  <mat-toolbar class="header-toolbar">
+    <h1>Gestión de Vendedores</h1>
+    <p class="subtitle">Administra y supervisa el rendimiento de tus vendedores</p>
+    <span class="spacer"></span>
+    <button mat-flat-button class="add-vendor-button" (click)="openAddUserDialog()">
+      <mat-icon>add</mat-icon> Añadir Vendedor
+    </button>
+  </mat-toolbar>
+
+  <div class="content-area">
+    <mat-tab-group
+      animationDuration="0ms"
+      class="tab-group"
+      mat-stretch-tabs="false"
+      (selectedTabChange)="onTabChange($event)"
+    >
+      <mat-tab>
+        <ng-template matTabLabel>
+          <mat-icon class="tab-icon">list</mat-icon> Lista de Vendedores
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card class="vendor-list-card">
+            <mat-card-content>
+              <div class="filter-section">
+                <mat-form-field appearance="outline" class="search-field">
+                  <mat-label>
+                    Buscar por nombre, documento, correo o dirección
+                  </mat-label>
+                  <input
+                    matInput
+                    (keyup)="applyFilter($event)"
+                    placeholder="Ej. Maria Perez"
+                    #input
+                  />
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+
+                <div class="status-filter-buttons">
+                  <button
+                    mat-stroked-button
+                    [class.active-filter-button]="currentFilterStatus === 'active'"
+                    (click)="applyStatusFilter('active')"
+                  >
+                    Activos
+                  </button>
+                  <button
+                    mat-stroked-button
+                    [class.active-filter-button]="currentFilterStatus === 'inactive'"
+                    (click)="applyStatusFilter('inactive')"
+                  >
+                    Inactivos
+                  </button>
+                  <button
+                    mat-stroked-button
+                    [class.active-filter-button]="currentFilterStatus === 'all'"
+                    (click)="applyStatusFilter('all')"
+                  >
+                    Todos
+                  </button>
+                </div>
+              </div>
+
+              <div class="mat-elevation-z2 table-container">
+                <table mat-table [dataSource]="dataSource" matSort>
+                  <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      ID <mat-icon class="sort-icon">unfold_more</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.id }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="vendedor">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Vendedor
+                      <mat-icon class="sort-icon">unfold_more</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="vendor-info">
+                        <div class="avatar-circle">
+                          {{ element.firstName?.charAt(0) | uppercase
+                          }}{{ element.lastName?.charAt(0) | uppercase }}
+                        </div>
+                        <div class="text-info">
+                          <strong>
+                            {{ element.firstName }} {{ element.lastName }}
+                          </strong>
+                          <br />
+                          <span class="secondary-text">
+                            {{ element.documentType }}:
+                            {{ element.numberDocument }}
+                          </span>
+                          <br />
+                          <span class="secondary-text">
+                            {{ element.address }}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="contacto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Contacto
+                      <mat-icon class="sort-icon">unfold_more</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="contact-info">
+                        <div class="contact-item">
+                          <mat-icon class="contact-icon">call</mat-icon>
+                          <span>{{ element.phoneNumber }}</span>
+                        </div>
+                        <div class="contact-item">
+                          <mat-icon class="contact-icon">mail</mat-icon>
+                          <span>{{ element.email }}</span>
+                        </div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="genero">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Género <mat-icon class="sort-icon">unfold_more</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <mat-chip-listbox>
+                        <mat-chip
+                          class="gender-chip"
+                          [ngClass]="{
+                            'chip-femenino': element.gender === 'Femenino',
+                            'chip-masculino': element.gender === 'Masculino'
+                          }"
+                          selected
+                        >
+                          {{ element.gender }}
+                        </mat-chip>
+                      </mat-chip-listbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="ventas">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Ventas <mat-icon class="sort-icon">unfold_more</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="sales-info">
+                        <span>
+                          S/ {{ element.totalSaleAmount | number : '1.2-2' }}
+                        </span>
+                        <br />
+                        <span class="secondary-text">
+                          Última:
+                          {{
+                            element.lastSaleDate | date: 'dd MMM, y hh:mm a'
+                          }}
+                        </span>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="cantidad">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Cantidad <mat-icon class="sort-icon">unfold_more</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="quantity-info">
+                        <mat-icon class="quantity-icon">shopping_cart</mat-icon>
+                        <span>{{ element.totalSales }} artículos vendidos</span>
+                      </div>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="registrationDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                      Registro
+                      <mat-icon class="sort-icon">unfold_more</mat-icon>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                      {{ element.registrationDate | date : 'dd MMM, y' }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                    <td mat-cell *matCellDef="let element">
+                      <div class="actions-cell">
+                        <mat-chip-listbox>
+                          <mat-chip
+                            class="status-chip"
+                            [ngClass]="{
+                              'chip-activo': element.estado === 'A',
+                              'chip-inactivo': element.estado === 'I'
+                            }"
+                            selected
+                          >
+                            {{ element.estado === 'A' ? 'Activo' : 'Inactivo' }}
+                          </mat-chip>
+                        </mat-chip-listbox>
+                        <div class="action-buttons">
+                          <button
+                            mat-icon-button
+                            class="register-sale-button"
+                            (click)="openUserSaleRegisterDialog(element)"
+                          >
+                            <mat-icon>attach_money</mat-icon>
+                          </button>
+                          <button
+                            mat-icon-button
+                            color="accent"
+                            (click)="openEditUserDialog(element)"
+                          >
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button
+                            mat-icon-button
+                            color="warn"
+                            (click)="deleteUser(element.id)"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <tr
+                    mat-header-row
+                    *matHeaderRowDef="displayedColumns"
+                  ></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                  ></tr>
+
+                  <tr class="mat-row" *matNoDataRow>
+                    <td
+                      class="mat-cell"
+                      [attr.colspan]="displayedColumns.length"
+                    >
+                      No hay datos que coincidan con el filtro
+                      "{{ input.value }}"
+                    </td>
+                  </tr>
+                </table>
+
+                <mat-paginator
+                  [pageSizeOptions]="[5, 10, 25, 100]"
+                  [pageSize]="5"
+                  aria-label="Seleccionar página de vendedores"
+                ></mat-paginator>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+</div>

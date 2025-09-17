@@ -1,0 +1,44 @@
+<mat-sidenav-container class="layout-container">
+  <mat-sidenav
+    #sidenav
+    class="sidebar"
+    [mode]="isScreenSmall ? 'over' : 'side'"
+    [opened]="!isScreenSmall || sidebarOpen"
+    (openedChange)="sidebarOpen = $event"
+  >
+    <div class="sidebar-inner-content">
+      <h1>Admin Panel</h1>
+      <nav>
+        <ul>
+          <li><a routerLink="/dashboard" routerLinkActive="active"><mat-icon>inventory_2</mat-icon> Dashboard</a></li>
+          <li><a routerLink="/productos" routerLinkActive="active"><mat-icon>category</mat-icon> Productos</a></li>
+          <li><a routerLink="/inventario" routerLinkActive="active"><mat-icon>warehouse</mat-icon> Inventario</a></li>
+          <li><a routerLink="/pedidos" routerLinkActive="active"><mat-icon>shopping_cart</mat-icon> Pedidos</a></li>
+          <li><a routerLink="/clientes" routerLinkActive="active"><mat-icon>group</mat-icon> Clientes</a></li>
+          <li><a routerLink="/usuarios" routerLinkActive="active"><mat-icon>trending_up</mat-icon> Gestión de Vendedores</a></li>
+          <li><a routerLink="/proveedores" routerLinkActive="active"><mat-icon>local_shipping</mat-icon> Proveedores</a></li>
+          <li><a routerLink="/supplier_product" routerLinkActive="active"><mat-icon>scale</mat-icon> Pedido Proveedor</a></li>
+
+        </ul>
+        <button mat-button color="warn" class="logout-btn" (click)="logout()">
+          <mat-icon>logout</mat-icon> Cerrar Sesión
+        </button>
+      </nav>
+    </div>
+    </mat-sidenav>
+
+  <mat-sidenav-content>
+    <button
+      mat-icon-button
+      class="hamburger"
+      (click)="toggleSidebar()"
+      *ngIf="isScreenSmall"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <main class="content-scroll">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

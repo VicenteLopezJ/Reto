@@ -1,0 +1,85 @@
+<app-supplier-product-form *ngIf="mostrarFormulario" [supplierProduct]="supplierProductParaEditar"
+    (guardar)="procesarSupplierProductGuardado($event)" (cerrar)="cerrarFormulario()">
+</app-supplier-product-form>
+
+<header>
+    <h2>Pedidos de Proveedor Registrados</h2>
+    <button (click)="abrirFormulario()"><i class="fas fa-seedling"></i> + Añadir Pedido de Proveedor</button>
+</header>
+
+<div class="filter-section">
+    <input type="text" placeholder=" Buscar pedidos de proveedor..." [(ngModel)]="searchTerm"
+        (input)="filtrarSupplierProducts()" />
+    <div class="filter-buttons">
+        <button [class.active-filter]="currentFilter === 'active'" (click)="setFilter('active')">
+            Activos ({{ activosCount }})
+        </button>
+        <button [class.active-filter]="currentFilter === 'inactive'" (click)="setFilter('inactive')">
+            Inactivos ({{ inactivosCount }})
+        </button>
+        <button [class.active-filter]="currentFilter === 'all'" (click)="setFilter('all')">
+            Todos ({{ totalCount }})
+        </button>
+        <button (click)="reportPdf()">G Reporte</button> <!-- Botón de reporte reintroducido -->
+    </div>
+</div>
+
+<table class="tabla-estilizada">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>ID Producto</th>
+            <th>ID Proveedor</th>
+            <th>Cantidad de Pedido</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+            <th>Promoción</th>
+            <th>Total</th>
+            <th>Días de Entrega</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let supplierProduct of supplierProductsFiltrados">
+            <td>{{ supplierProduct.id }}</td>
+            <td>{{ supplierProduct.product_id }}</td>
+            <td>{{ supplierProduct.suppliers_id }}</td>
+            <td>{{ supplierProduct.order_quantity }}</td>
+            <td>{{ supplierProduct.price | number:'1.2-2' }}</td>
+            <td>{{ supplierProduct.subtotal | number:'1.2-2' }}</td>
+            <td>{{ supplierProduct.promotion }}</td>
+            <td>{{ supplierProduct.total | number:'1.2-2' }}</td>
+            <td>{{ supplierProduct.lead_time_days }}</td>
+            <td>
+                <span [ngClass]="{
+                    'badge-estado': true,
+                    'activo': supplierProduct.state === 'A',
+                    'inactivo': supplierProduct.state === 'I'
+                }">
+                    {{ supplierProduct.state === 'A' ? 'Activo' : (supplierProduct.state === 'I' ? 'Inactivo' :
+                    supplierProduct.state) }}
+                </span>
+            </td>
+            <td>
+                <ng-container
+                    *ngIf="supplierProduct.state === 'A' || (currentFilter === 'all' && supplierProduct.state === 'A')">
+                    <button class="btn-accion editar" (click)="editar(supplierProduct)">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button *ngIf="supplierProduct.id !== undefined" class="btn-accion eliminar"
+                        (click)="eliminar(supplierProduct.id!)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="supplierProduct.state === 'I'">
+                    <button *ngIf="supplierProduct.id !== undefined" class="btn-accion restaurar"
+                        (click)="restaurar(supplierProduct.id!)">
+                        <i class="fas fa-redo-alt"></i>
+                    </button>
+                </ng-container>
+            </td>
+        </tr>
+    </tbody>
+</table>

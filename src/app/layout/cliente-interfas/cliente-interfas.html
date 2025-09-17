@@ -1,0 +1,45 @@
+<div class="layout">
+  <!-- Checkbox invisible para controlar el estado -->
+  <input type="checkbox" id="toggleSidebar" class="toggle-checkbox" />
+
+  <label for="toggleSidebar" class="hamburger">☰</label>
+
+  <nav class="sidebar">
+    <h1 class="logo">Agroinversiones</h1>
+
+    <ul class="nav-links">
+      <li routerLink="/cliente/client-product" routerLinkActive="active">
+        <i class="fas fa-box"></i>
+        <span>Productos</span>
+      </li>
+      <li routerLink="/cliente/client-cart" routerLinkActive="active">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Carrito</span>
+      </li>
+      <li routerLink="/cliente/pedidos" routerLinkActive="active">
+        <i class="fas fa-receipt"></i>
+        <span>Mis Pedidos</span>
+      </li>
+      <li routerLink="/cliente/client-profile" routerLinkActive="active">
+        <i class="fas fa-user-circle"></i>
+        <span>Mi Perfil</span>
+      </li>
+      <li routerLink="/cliente/comparacion" routerLinkActive="active">
+        <i class="fas fa-balance-scale"></i>
+        <span>Comparación</span>
+      </li>
+    </ul>
+
+    <!-- Botón de Cerrar Sesión -->
+    <div class="logout-container">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        Cerrar Sesión
+      </button>
+    </div>
+  </nav>
+
+  <main class="contenido">
+    <router-outlet></router-outlet>
+  </main>
+</div>

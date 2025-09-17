@@ -1,0 +1,73 @@
+<div class="profile-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Mi Perfil</mat-card-title>
+      <mat-card-subtitle>Actualice su información personal a continuación.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Nombre</mat-label>
+          <input matInput [(ngModel)]="nombre" name="nombre">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Apellido</mat-label>
+          <input matInput [(ngModel)]="apellido" name="apellido">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Correo Electrónico</mat-label>
+          <input matInput type="email" [(ngModel)]="correoElectronico" name="correoElectronico">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Teléfono</mat-label>
+          <input matInput type="tel" [(ngModel)]="telefono" name="telefono">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Dirección</mat-label>
+          <input matInput [(ngModel)]="direccion" name="direccion">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Tipo de Cliente</mat-label>
+          <mat-select [(ngModel)]="tipoCliente" name="tipoCliente">
+            <mat-option value="Minorista">Minorista</mat-option>
+            <mat-option value="Mayorista">Mayorista</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" (click)="guardarCambios()">Guardar Cambios</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Información de la Cuenta</mat-card-title>
+      <mat-card-subtitle>Detalles adicionales de su cuenta.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="info-row">
+        <div class="info-item">
+          <strong>ID de Cliente</strong>
+          <p>1</p>
+        </div>
+        <div class="info-item">
+          <strong>Tipo de Cliente</strong>
+          <p>{{ tipoCliente }}</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-item">
+          <strong>Estado</strong>
+          <p>Activo</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,84 @@
+<div class="modal-overlay">
+    <div class="modal">
+        <div class="modal-content">
+            <h3>{{ inventory?.id ? 'Editar' : 'Nuevo' }} Inventario</h3>
+
+            <div class="form-group" [class.has-content]="inventory.products_id">
+                <input type="number" required [(ngModel)]="inventory.products_id" (blur)="touched.products_id = true" />
+                <label>ID Producto</label>
+                <div *ngIf="touched.products_id && !productsIdValid()" class="error-message">
+                    Debe ser un ID mayor al de los productos existentes.
+                </div>
+            </div>
+
+            <div class="form-group" [class.has-content]="inventory.quantity_available">
+                <input type="number" required [(ngModel)]="inventory.quantity_available"
+                    (blur)="touched.quantity = true" />
+                <label>Cantidad disponible</label>
+                <div *ngIf="touched.quantity && !quantityValid()" class="error-message">
+                    Debe ser un número mayor a 0.
+                </div>
+            </div>
+
+            <div class="form-group" [class.has-content]="inventory.batch_number">
+                <input type="text" required [(ngModel)]="inventory.batch_number" (blur)="touched.batch = true" />
+                <label>Número de lote</label>
+                <div *ngIf="touched.batch && !batchValid()" class="error-message">
+                    Este campo es obligatorio.
+                </div>
+            </div>
+
+            <div class="form-group" [class.has-content]="inventory.specs">
+                <input type="text" required [(ngModel)]="inventory.specs" (blur)="touched.specs = true" />
+                <label>Especificaciones</label>
+                <div *ngIf="touched.specs && !specsValid()" class="error-message">
+                    Este campo es obligatorio.
+                </div>
+            </div>
+
+            <div class="form-group" [class.has-content]="inventory.location">
+                <input type="text" required [(ngModel)]="inventory.location" (blur)="touched.location = true" />
+                <label>Ubicación</label>
+                <div *ngIf="touched.location && !locationValid()" class="error-message">
+                    Este campo es obligatorio.
+                </div>
+            </div>
+
+            <div class="form-group" [class.has-content]="inventory.entry_date">
+                <input type="date" required [(ngModel)]="inventory.entry_date" [max]="today"
+                    (blur)="touched.entry_date = true" />
+                <label>Fecha de entrada</label>
+                <div *ngIf="touched.entry_date && !entryDateValid()" class="error-message">
+                    Fecha requerida.
+                </div>
+            </div>
+
+            <div class="form-group" [class.has-content]="inventory.last_updated">
+                <input type="date" required [(ngModel)]="inventory.last_updated" [max]="today"
+                    (blur)="touched.last_updated = true" />
+                <label>Última actualización</label>
+                <div *ngIf="touched.last_updated && !lastUpdatedValid()" class="error-message">
+                    Fecha requerida.
+                </div>
+            </div>
+
+            <div class="form-group" [class.has-content]="inventory.status">
+                <select [(ngModel)]="inventory.status" (blur)="touched.status = true">
+                    <option value="" disabled selected hidden></option>
+                    <option value="DIS">Disponible</option>
+                    <option value="RES">Reservado</option>
+                    <option value="TRA">Tramitido</option>
+                    <option value="DAÑ">Dañado</option>
+                </select>
+                <label>Estado</label>
+                <div *ngIf="touched.status && !statusValid()" class="error-message">
+                    Seleccione un estado válido.
+                </div>
+            </div>
+            <div class="buttons">
+                <button (click)="guardarInventario()">Guardar</button>
+                <button class="cancel-btn" (click)="cerrarFormulario()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

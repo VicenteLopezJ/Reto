@@ -1,0 +1,234 @@
+<main class="main-content">
+  <header class="main-header">
+    <h2>Proveedores</h2>
+    <button class="add-btn" (click)="abrirFormularioNuevoProveedor()">
+      <i class="fas fa-plus"></i> Añadir Proveedor
+    </button>
+  </header>
+
+  <input
+    type="text"
+    class="search-box"
+    placeholder="Buscar proveedores..."
+    [(ngModel)]="busqueda"
+  />
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Empresa</th>
+          <th>RUC</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let proveedor of proveedoresFiltrados(); let i = index">
+          <td>{{ (paginaActual - 1) * proveedoresPorPagina + i + 1 }}</td>
+          <td>{{ proveedor.empresa }}</td>
+          <td>{{ proveedor.ruc }}</td>
+          <td>{{ proveedor.correo }}</td>
+          <td>{{ proveedor.telefono }}</td>
+          <td>
+            <span class="badge activo" *ngIf="proveedor.estado === 'Activo'"
+              >Activo</span
+            >
+            <span class="badge inactivo" *ngIf="proveedor.estado !== 'Activo'"
+              >Inactivo</span
+            >
+          </td>
+          <td>
+            <i
+              class="fas fa-pen-to-square action"
+              title="Editar"
+              (click)="editarProveedor(proveedor)"
+            ></i>
+            <i
+              class="fas fa-trash-can action"
+              title="Eliminar"
+              (click)="eliminarProveedor(proveedor.id)"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<div *ngIf="proveedorEditado" class="modal">
+  <div class="modal-content">
+    <h3>Editar Proveedor</h3>
+    <form
+      (ngSubmit)="guardarProveedor(formularioProveedor)"
+      #formularioProveedor="ngForm"
+    >
+      <label>Empresa</label>
+      <input
+        type="text"
+        [(ngModel)]="proveedorEditado.empresa"
+        name="empresa"
+        required
+        pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$"
+        #empresa="ngModel"
+      />
+      <div *ngIf="empresa.invalid && empresa.touched" class="error">
+        La empresa solo puede contener letras.
+      </div>
+
+      <label>RUC</label>
+      <input
+        type="text"
+        [(ngModel)]="proveedorEditado.ruc"
+        name="ruc"
+        required
+        pattern="^\d{11}$"
+        #ruc="ngModel"
+      />
+      <div *ngIf="ruc.invalid && ruc.touched" class="error">
+        El RUC debe tener exactamente 11 dígitos numéricos.
+      </div>
+
+      <label>Correo</label>
+      <input
+        type="email"
+        [(ngModel)]="proveedorEditado.correo"
+        name="correo"
+        required
+        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        #correo="ngModel"
+      />
+      <div *ngIf="correo.invalid && correo.touched" class="error">
+        El correo debe contener un &#64; y ser válido.
+      </div>
+
+      <label>Teléfono</label>
+      <input
+        type="text"
+        [(ngModel)]="proveedorEditado.telefono"
+        name="telefono"
+        required
+        pattern="^9\d{8}$"
+        #telefono="ngModel"
+      />
+      <div *ngIf="telefono.invalid && telefono.touched" class="error">
+        El teléfono debe tener exactamente 9 dígitos numéricos.
+      </div>
+
+      <label>Estado</label>
+      <select
+        [(ngModel)]="proveedorEditado.estado"
+        name="estado"
+        required
+        #estado="ngModel"
+      >
+        <option value="Activo">Activo</option>
+        <option value="Inactivo">Inactivo</option>
+      </select>
+      <div *ngIf="estado.invalid && estado.touched" class="error">
+        El estado es requerido.
+      </div>
+
+      <button type="submit" [disabled]="formularioProveedor.invalid">
+        Guardar Cambios
+      </button>
+      <button type="button" (click)="cancelarEdicion()">Cancelar</button>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="nuevoProveedor" class="modal">
+  <div class="modal-content">
+    <h3>Añadir Nuevo Proveedor</h3>
+    <form
+      (ngSubmit)="agregarProveedor(formularioNuevoProveedor)"
+      #formularioNuevoProveedor="ngForm"
+    >
+      <label>Empresa</label>
+      <input
+        type="text"
+        [(ngModel)]="nuevoProveedor.empresa"
+        name="empresa"
+        required
+        pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\.]+$"
+        #empresaNuevo="ngModel"
+      />
+      <div *ngIf="empresaNuevo.invalid && empresaNuevo.touched" class="error">
+        La empresa solo puede contener letras.
+      </div>
+
+      <label>RUC</label>
+      <input
+        type="text"
+        [(ngModel)]="nuevoProveedor.ruc"
+        name="ruc"
+        required
+        pattern="^\d{11}$"
+        #rucNuevo="ngModel"
+      />
+      <div *ngIf="rucNuevo.invalid && rucNuevo.touched" class="error">
+        El RUC debe tener exactamente 11 dígitos numéricos.
+      </div>
+
+      <label>Correo</label>
+      <input
+        type="email"
+        [(ngModel)]="nuevoProveedor.correo"
+        name="correo"
+        required
+        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        #correoNuevo="ngModel"
+      />
+      <div *ngIf="correoNuevo.invalid && correoNuevo.touched" class="error">
+        El correo debe contener un &#64; y ser válido.
+      </div>
+
+      <label>Teléfono</label>
+      <input
+        type="text"
+        [(ngModel)]="nuevoProveedor.telefono"
+        name="telefono"
+        required
+        pattern="^9\d{8}$"
+        #telefonoNuevo="ngModel"
+      />
+      <div *ngIf="telefonoNuevo.invalid && telefonoNuevo.touched" class="error">
+        El teléfono debe tener exactamente 9 dígitos numéricos.
+      </div>
+
+      <label>Estado</label>
+      <select
+        [(ngModel)]="nuevoProveedor.estado"
+        name="estado"
+        required
+        #estadoNuevo="ngModel"
+      >
+        <option value="Activo">Activo</option>
+        <option value="Inactivo">Inactivo</option>
+      </select>
+      <div *ngIf="estadoNuevo.invalid && estadoNuevo.touched" class="error">
+        El estado es requerido.
+      </div>
+
+      <button type="submit" [disabled]="formularioNuevoProveedor.invalid">
+        Añadir
+      </button>
+      <button type="button" (click)="cancelarFormularioNuevoProveedor()">
+        Cancelar
+      </button>
+    </form>
+  </div>
+</div>
+
+<nav *ngIf="totalPaginas() > 1" class="pagination">
+  <button (click)="paginaActual = paginaActual - 1" [disabled]="paginaActual === 1">Anterior</button>
+
+  <span *ngFor="let pagina of [].constructor(totalPaginas()); let i = index">
+    <button (click)="paginaActual = i + 1" [class.active]="paginaActual === i + 1">{{ i + 1 }}</button>
+  </span>
+
+  <button (click)="paginaActual = paginaActual + 1" [disabled]="paginaActual === totalPaginas()">Siguiente</button>
+</nav>

@@ -1,0 +1,27 @@
+<div class="contenedor-productos">
+    <h2>Productos</h2>
+
+    <input type="text" [(ngModel)]="busqueda" placeholder="🔍 Buscar productos..." class="buscador" />
+
+    <div class="productos-grid">
+        <div class="card" *ngFor="let producto of productosPaginados" [ngClass]="producto.categoria">
+            <div class="card-header">
+                <span class="categoria">{{ producto.categoria }}</span>
+            </div>
+            <img [src]="producto.imagen" [alt]="producto.nombre" class="producto-imagen" />
+            <div class="card-body">
+                <h3>{{ producto.nombre }}</h3>
+                <p>{{ producto.descripcion }}</p>
+                <strong>${{ producto.precio }}</strong>
+                <p>{{ producto.stock }} unidades disponibles</p>
+                <button class="btn-carrito">🛒 Añadir al Carrito</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="paginacion">
+        <button (click)="paginaAnterior()" [disabled]="paginaActual === 1">⬅ Anterior</button>
+        <span>Página {{ paginaActual }} de {{ totalPaginas }}</span>
+        <button (click)="paginaSiguiente()" [disabled]="paginaActual === totalPaginas">Siguiente ➡</button>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+<mat-card class="order-card">
+  <mat-card-header>
+    <mat-card-title>Detalles de la Orden #{{ data.order.id }}</mat-card-title>
+    <span class="spacer"></span>
+    <button mat-icon-button aria-label="Cerrar detalles" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="order-info">
+      <div>
+        <mat-icon class="icon agro-icon">person</mat-icon>
+        <strong>ID Cliente:</strong> {{ data.order.clientId }}
+      </div>
+      <div>
+        <mat-icon class="icon agro-icon">person</mat-icon>
+        <strong>ID Usuario:</strong> {{ data.order.userId }}
+      </div>
+      <div>
+        <mat-icon class="icon agro-icon">calendar_today</mat-icon>
+        <strong>Fecha de Orden:</strong> {{ data.order.orderDate | date : "dd/MM/yyyy" }}
+      </div>
+      <div>
+        <mat-icon class="icon agro-icon">calendar_today</mat-icon>
+        <strong>Fecha de Entrega:</strong> {{ data.order.deliveryDate | date : "dd/MM/yyyy" }}
+      </div>
+      <div>
+        <mat-icon class="icon agro-icon">place</mat-icon>
+        <strong>Dirección de Entrega:</strong> {{ data.order.deliveryAddress }}
+      </div>
+      <div>
+        <mat-icon class="icon agro-icon">payment</mat-icon>
+        <strong>Método de Pago:</strong> {{ data.order.paymentMethod }}
+      </div>
+      <div>
+        <mat-icon class="icon agro-icon">attach_money</mat-icon>
+        <strong>Total:</strong> {{ data.order.totalAmount | currency : "USD" : "symbol" : "1.2-2" }}
+      </div>
+      <div>
+        <mat-icon class="icon agro-icon">assignment</mat-icon>
+        <strong>Estado:</strong> {{ data.order.status }}
+      </div>
+      <div>
+        <mat-icon class="icon agro-icon">note</mat-icon>
+        <strong>Notas:</strong> {{ data.order.notes || "Sin notas" }}
+      </div>
+    </div>
+
+    <h3>Detalles de Productos:</h3>
+    <div
+      *ngIf="
+        data.order.orderDetails && data.order.orderDetails.length > 0;
+        else noDetails
+      "
+      class="order-details-list"
+    >
+      <ul>
+        <li *ngFor="let detail of data.order.orderDetails" class="detail-item">
+          <mat-icon class="icon agro-icon">inventory</mat-icon>
+          <span class="prod-id">Producto ID: {{ detail.productId }}</span>
+          <span class="qty">Cantidad: {{ detail.quantity }}</span>
+          <span class="unit-price">
+            Precio Unitario: {{ detail.unitPrice | currency : "USD" : "symbol" }}
+          </span>
+          <span class="subtotal">
+            Subtotal: {{ detail.subtotal | currency : "USD" : "symbol" }}
+          </span>
+          <span *ngIf="detail.discount > 0" class="discount">
+            (Descuento: {{ detail.discount / 100 | percent : "1.0-0" }}) 
+          </span>
+          <span *ngIf="detail.comments" class="comments">
+            - {{ detail.comments }}
+          </span>
+        </li>
+      </ul>
+    </div>
+    <ng-template #noDetails>
+      <p class="no-details">No hay detalles de productos para esta orden.</p>
+    </ng-template>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-raised-button color="primary" (click)="onClose()">
+      Cerrar
+    </button>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,77 @@
+<div class="modal-overlay">
+    <div class="modal">
+        <h3>{{ supplierProduct.id ? 'Editar' : 'Nuevo' }} Pedido de Proveedor</h3>
+
+        <div class="form-group" [class.has-content]="supplierProduct.product_id">
+            <input type="number" required [(ngModel)]="supplierProduct.product_id" (blur)="productIdTouched = true" />
+            <label>ID Producto</label>
+            <div *ngIf="productIdTouched && !productIdValid()" class="error-message">ID de Producto requerido y debe ser
+                un número positivo.</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="supplierProduct.suppliers_id">
+            <input type="number" required [(ngModel)]="supplierProduct.suppliers_id"
+                (blur)="supplierIdTouched = true" />
+            <label>ID Proveedor</label>
+            <div *ngIf="supplierIdTouched && !supplierIdValid()" class="error-message">ID de Proveedor requerido y debe
+                ser un número positivo.</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="supplierProduct.order_quantity">
+            <input type="number" required [(ngModel)]="supplierProduct.order_quantity"
+                (blur)="orderQuantityTouched = true" (input)="calculateSubtotalAndTotal()" />
+            <label>Cantidad de Pedido</label>
+            <div *ngIf="orderQuantityTouched && !orderQuantityValid()" class="error-message">Cantidad de Pedido
+                requerida y debe ser un número positivo.</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="isPriceContentReady() || priceTouched">
+            <input type="text" required [(ngModel)]="supplierProduct.price" (blur)="priceTouched = true"
+                (input)="onInputPrice($event); calculateSubtotalAndTotal()" />
+            <label>Precio</label>
+            <div *ngIf="priceTouched && !priceValid()" class="error-message">Debe ser un valor positivo.</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="isSubtotalContentReady()">
+            <input type="text" [ngModel]="supplierProduct.subtotal | number:'1.2-2'" [disabled]="true" />
+            <label>Subtotal</label>
+        </div>
+
+        <div class="form-group" [class.has-content]="supplierProduct.promotion">
+            <select required [(ngModel)]="supplierProduct.promotion" (change)="calculateSubtotalAndTotal()"
+                (blur)="promotionTouched = true">
+                <option value="Sin promociones">Sin promociones</option>
+                <option value="Descuento 10%">Descuento 10%</option>
+            </select>
+            <label>Promoción</label>
+            <div *ngIf="promotionTouched && !promotionValid()" class="error-message">Seleccione una opción de promoción.
+            </div>
+        </div>
+
+        <div class="form-group" [class.has-content]="isTotalContentReady()">
+            <input type="text" [ngModel]="supplierProduct.total | number:'1.2-2'" [disabled]="true" />
+            <label>Total</label>
+        </div>
+
+        <div class="form-group" [class.has-content]="supplierProduct.lead_time_days">
+            <input type="number" required [(ngModel)]="supplierProduct.lead_time_days"
+                (blur)="leadTimeDaysTouched = true" />
+            <label>Días de Entrega</label>
+            <div *ngIf="leadTimeDaysTouched && !leadTimeDaysValid()" class="error-message">Días de Entrega requeridos y
+                debe ser un número positivo.</div>
+        </div>
+
+        <div class="form-group" [class.has-content]="true">
+            <select required [(ngModel)]="supplierProduct.state" disabled>
+                <option value="A">Activo</option>
+                <option value="I" hidden>Inactivo</option>
+            </select>
+            <label>Estado</label>
+        </div>
+
+        <div class="buttons">
+            <button (click)="guardarSupplierProduct()">Guardar</button>
+            <button class="cancel-btn" (click)="cerrarFormulario()">Cancelar</button>
+        </div>
+    </div>
+</div>

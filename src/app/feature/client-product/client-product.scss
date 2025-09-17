@@ -1,0 +1,172 @@
+// Estilo general del layout si aún no lo tienes
+.layout {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 210px;
+    background-color: #0a5d0a;
+    color: white;
+}
+
+// Estilo para el contenido principal
+.contenedor-productos {
+    flex: 1;
+    padding: 2rem;
+    background-color: #efefef;
+
+    h2 {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .buscador {
+        width: 100%;
+        max-width: 400px;
+        padding: 0.5rem 1rem;
+        margin: 1rem 0 2rem 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+    }
+
+    .productos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+
+    .card-header {
+        padding: 0.8rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .categoria {
+        padding: 0.3rem 0.6rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: bold;
+    }
+
+    .producto-imagen {
+        width: 100%;
+        height: 180px;
+        object-fit: contain;
+        padding: 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+
+        h3 {
+            margin: 0.5rem 0;
+        }
+
+        p {
+            margin: 0.25rem 0;
+        }
+    }
+
+    // Estilos por categoría
+    &.Herbicida .categoria {
+        background-color: #d1f5db;
+        color: #11692e;
+    }
+
+    &.Insecticida .categoria {
+        background-color: #ffe0e0;
+        color: #c0392b;
+    }
+
+    &.Fungicida .categoria {
+        background-color: #e0eaff;
+        color: #2e86de;
+    }
+
+    &.Nutriente .categoria {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    &.Bioestimulante .categoria {
+        background-color: #e2f0cb;
+        color: #33691e;
+    }
+
+    &.Semilla .categoria {
+        background-color: #fce4ec;
+        color: #ad1457;
+    }
+}
+
+.btn-carrito {
+    margin-top: auto;
+    padding: 0.5rem;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+
+    width: calc(100% - 2rem);
+    margin-left: 1rem;
+    margin-right: 1rem;
+
+    &:hover {
+        background-color: #158928;
+    }
+}
+
+.paginacion {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    button {
+        padding: 0.5rem 1rem;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.95rem;
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    }
+
+    span {
+        font-weight: 500;
+        color: #333;
+    }
+}
